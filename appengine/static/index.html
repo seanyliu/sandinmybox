@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSL0WNg47Zejg83jzLRmHTdBiXuURRsuY&sensor=true"></script>
+
+<!-- for the text label appended to the user marker -->
+<script type="text/javascript" src="js/label.js"></script>
+
+<!-- for the maurader styling, minus grainy texture -->
+<script type="text/javascript" src="js/getmapstyles.js"></script>
+
+<!-- for the grainy map texture with the gridlines -->
+<script type="text/javascript" src="js/grainymaptype.js"></script>
+
+<script type="text/javascript">
+
+/*
+Create a user class. Then specify an instance known as 'demo user'.
+Run a 'demo' method constantly, which just updates the demo user's location.
+Demo user should then move itself exponentially closer, with a minimum distance.
+It should also have a 'last footprint dropped'.  At each footprint location,
+it should leave a footprint class.  The footprint should simply remove itself
+whenever it's finished.
+*/
+
+function initGoogleMaps() {
+  var stylesArray = getMapStyles();
+
+  var mapOptions = {
+    zoom: 17,
+    center: new google.maps.LatLng(42.366458,-71.122813),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  }
+  var map = new google.maps.Map(document.getElementById("mapCanvas"), mapOptions);
+  map.setOptions({styles:stylesArray});
+
+  // Subtle grid + map grain
+  var grainyMap = new GrainyMapType(new google.maps.Size(100,100));
+  map.overlayMapTypes.insertAt(0, grainyMap);
+
+  var demoUser = new UserSean(map).startupUserSean();
+}
+
+function placeSelfMarker(map) {
+  var demoUser1 = seanMarker(map);
+  demoUser1.init();
+}
+
+function UserSean(map) {
+  this.label = null;
+  this.map = map;
+  this.locationHistory = new Array();
+  this.loopIndex = 0; // the index into the predetermined movement path
+  this.marker = null;
+  this.movementPath = [
+    [42.366376,-71.122818],
+    [42.366299,-71.122845],
+    [42.366198,-71.12288],
+    [42.366244,-71.123078],
+    [42.366297,-71.123279],
+    [42.366357,-71.123483],
+    [42.366414,-71.123676],
+    [42.36648,-71.123843],
+    [42.366555,-71.124033],
+    [42.366644,-71.124234],
+    [42.366723,-71.124387],
+    [42.366799,-71.124481],
+    [42.366971,-71.12435],
+    [42.367122,-71.124242],
+    [42.367151,-71.124073],
+    [42.367082,-71.123848],
+    [42.366961,-71.123572],
+    [42.366868,-71.123271],
+    [42.366785,-71.122974],
+    [42.366733,-71.122708],
+    [42.366602,-71.122751]
+  ];
+
+  this.updateLocation = function(newPosition) {
+    // Marker sizes are expressed as a Size of X,Y
+    // where the origin of the image (0,0) is located
+    // in the top left of the image.
+    var image = new google.maps.MarkerImage('images/dotwshadow-gray.fw.png',
+      // This marker is x pixels wide by y pixels tall.
+      new google.maps.Size(17, 19),
+      // The origin for this image is 0,0.
+      new google.maps.Point(0,0),
+      // The anchor for this image is the base of the flagpole at 0,32.
+      new google.maps.Point(8, 8));
+
+    var newMarker = new google.maps.Marker({
+      position: newPosition,
+      map: this.map,
+      icon: image
+    });
+
+    if (this.marker) {
+      this.marker.setMap(null);
+    }
+
+    this.marker = newMarker;
+    this.label.bindTo('position', this.marker, 'position');
+  }
+
+  // move the user on the map
+  this.run = function() {
+    this.loopIndex++;
+    this.loopIndex = this.loopIndex % this.movementPath.length;
+    var newLatLngArr = this.movementPath[this.loopIndex];
+    var newLatLng = new google.maps.LatLng(newLatLngArr[0], newLatLngArr[1]);
+    this.updateLocation(newLatLng);
+  }
+ 
+  // initialization function
+  this.startupUserSean = function() {
+    var selfObject = this;
+
+    this.label = new Label({
+      map: this.map,
+      text: "Sean"
+    });
+
+    window.setInterval(function() {
+      selfObject.run();
+    }, 500);
+    return this;
+  }
+}
+
+//$(window).load(loadGoogleMapsScript);
+$(window).load(function() {
+  initGoogleMaps();
+});
+
+</script>
+<link href='http://fonts.googleapis.com/css?family=IM+Fell+DW+Pica' rel='stylesheet' type='text/css'>
+<style type="text/css">
+
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+}
+
+#mapCanvas {
+  height: 100%;
+  width: 100%;
+}
+
+.labelName {
+  font-family: 'IM Fell DW Pica', serif;
+  color: #6C6453;
+}
+
+</style>
+</head>
+<body>
+<div id="mapCanvas">hello</div>
+</body>
+</html>
