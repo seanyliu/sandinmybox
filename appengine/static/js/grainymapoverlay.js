@@ -1,8 +1,8 @@
-function GrainyMapType(tileSize) {
+function GrainyMapOverlay(tileSize) {
   this.tileSize = tileSize;
 }
 
-GrainyMapType.prototype.getTile = function(coord, zoom, ownerDocument) {
+GrainyMapOverlay.prototype.getTile = function(coord, zoom, ownerDocument) {
   var div = ownerDocument.createElement('div');
   div.style.width = this.tileSize.width + 'px';
   div.style.height = this.tileSize.height + 'px';

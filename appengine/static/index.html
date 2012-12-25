@@ -4,49 +4,75 @@
 <script type="text/javascript" src="js/jquery-1.8.3.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSL0WNg47Zejg83jzLRmHTdBiXuURRsuY&sensor=true"></script>
 
-<!-- for the text label appended to the user marker -->
+<!-- Google Maps API makes it hard to attach text/images to a separate marker.
+     This is a 3rd party library that makes it much easier to do that.
+     Needed for names like 'Sean' underneath the dot -->
 <script type="text/javascript" src="js/label.js"></script>
 
-<!-- for the maurader styling, minus grainy texture -->
+<!-- For the maurader styling, minus the grainy texture.  This basically
+     is coloring and removing of text from the default Google map.-->
 <script type="text/javascript" src="js/getmapstyles.js"></script>
 
-<!-- for the grainy map texture with the gridlines -->
-<script type="text/javascript" src="js/grainymaptype.js"></script>
+<!-- For the grainy map texture with the gridlines. It basically overlays
+     a second 'map' of repeating tiles.  Each tile is just the graph paper
+     plus the grainy texture. -->
+<script type="text/javascript" src="js/grainymapoverlay.js"></script>
 
 <script type="text/javascript">
 
-/*
-Create a user class. Then specify an instance known as 'demo user'.
-Run a 'demo' method constantly, which just updates the demo user's location.
-Demo user should then move itself exponentially closer, with a minimum distance.
-It should also have a 'last footprint dropped'.  At each footprint location,
-it should leave a footprint class.  The footprint should simply remove itself
-whenever it's finished.
-*/
+/**
+ * Start here. Call this when the page finishes loading.
+ */
+$(window).load(function() {
+  // get the div for the map
+  var mapDiv = document.getElementById("mapCanvas");
 
-function initGoogleMaps() {
-  var stylesArray = getMapStyles();
+  // Create a new Maurader's map
+  var map = initGoogleMaps(mapDiv);
+  styleMapLikeMauraders(map);
 
+  // Add a demo user
+  // TODO: Fix the way the demo user is done
+  // TODO: Fix the way label.js works. Specifically take out some of
+  // the details, such as the font family and label positioning, etc.
+  // OR rename it to be something like UserLabel.js.
+  var demoUser = new UserSean(map).startupUserSean();
+});
+
+/**
+ * Initialize a default Google maps
+ */
+function initGoogleMaps(mapDiv) {
   var mapOptions = {
     zoom: 17,
     center: new google.maps.LatLng(42.366458,-71.122813),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   }
-  var map = new google.maps.Map(document.getElementById("mapCanvas"), mapOptions);
+  var map = new google.maps.Map(mapDiv, mapOptions);
+  return map;
+}
+
+/**
+ * Take a default-styled Google Map and make it look like a
+ * Maurader's map
+ */
+function styleMapLikeMauraders(map) {
+  // from getmapstyles.js
+  var stylesArray = getMapStyles();
+
+  // adjust the coloring
   map.setOptions({styles:stylesArray});
 
-  // Subtle grid + map grain
-  var grainyMap = new GrainyMapType(new google.maps.Size(100,100));
+  // add texture
+  var grainyMap = new GrainyMapOverlay(new google.maps.Size(100,100));
   map.overlayMapTypes.insertAt(0, grainyMap);
 
-  var demoUser = new UserSean(map).startupUserSean();
 }
 
-function placeSelfMarker(map) {
-  var demoUser1 = seanMarker(map);
-  demoUser1.init();
-}
-
+/**
+ * TODO: This demo user code should be abstracted into re-usable real 'User' code
+ * and demo-specific code, instead of being a jumbled mass.
+ */
 function UserSean(map) {
   this.label = null;
   this.map = map;
@@ -127,11 +153,6 @@ function UserSean(map) {
     return this;
   }
 }
-
-//$(window).load(loadGoogleMapsScript);
-$(window).load(function() {
-  initGoogleMaps();
-});
 
 </script>
 <link href='http://fonts.googleapis.com/css?family=IM+Fell+DW+Pica' rel='stylesheet' type='text/css'>
