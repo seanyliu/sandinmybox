@@ -9,6 +9,12 @@ function AnimatedUser(map, userName, userId) {
   this.MINIMUM_POLL_TIME = 1000; // ms
   this.MAXIMUM_POLL_TIME = 1000*60; // ms
 
+  // Drawing parameters
+  // TODO: slow down the draw if the user isn't moving
+  this.FPS = 30;
+  this.DRAW_INTERVAL = 1000 / this.FPS;
+  this.MINIMUM_ANIMATION_DISTANCE = 0; // meters
+
   this.initMarkerAndLabel = function(position) {
     this.initMarker(position);
     this.initLabel(this.marker, this.userName); // call after marker
@@ -41,14 +47,6 @@ function AnimatedUser(map, userName, userId) {
       text: "Sean"
     });
     this.label.bindTo('position', marker, 'position');
-  }
-
-  this.updateLocation = function() {
-    if (!this.marker) {
-      this.initMarkerAndLabel(this.currentLocation);
-    }
-
-    this.marker.setPosition(this.currentLocation);
   }
 
   this.getCurrentTime = function() {
@@ -87,17 +85,44 @@ function AnimatedUser(map, userName, userId) {
     }, timeUntilNextPoll);
 
     // Update the location
+    // get drawn in the draw() loop
     this.currentLocation = newLocation;
     this.lastPollTime = newPollTime;
-    this.updateLocation();
+  }
+
+  this.draw = function() {
+    if (!this.marker.getPosition()) {
+      this.marker.setPosition(this.currentLocation);
+    }
+
+    if (this.currentLocation != null) {
+      // Move the user to the correct location within 1 second
+      var markerCurrentLocation = this.marker.getPosition();
+      var remainingDistanceToAnimate = google.maps.geometry.spherical.computeDistanceBetween(this.currentLocation, markerCurrentLocation); // meters
+      var markerDestLocation = this.currentLocation;
+      if (remainingDistanceToAnimate > this.MINIMUM_ANIMATION_DISTANCE) {
+        var newLat = (1/this.FPS) * this.currentLocation.lat() + (1 - (1/this.FPS)) * markerCurrentLocation.lat();
+        var newLng = (1/this.FPS) * this.currentLocation.lng() + (1 - (1/this.FPS)) * markerCurrentLocation.lng();
+        markerDestLocation = new google.maps.LatLng(newLat, newLng);
+      }
+      this.marker.setPosition(markerDestLocation);
+    }
+
+    var selfObject = this;
+    setTimeout(function() {
+      selfObject.draw();
+    }, this.DRAW_INTERVAL);
   }
  
   // initialization function
   this.startupAnimatedUser = function() {
+    this.initMarkerAndLabel(null);
+
     // initialize a time of last poll to be now
     this.lastPollTime = this.getCurrentTime();
 
     this.pollLocation();
+    this.draw();
     return this;
   }
 
