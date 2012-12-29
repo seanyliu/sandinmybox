@@ -10,9 +10,7 @@ function AnimatedUser(map, userName, userId) {
   this.MAXIMUM_POLL_TIME = 1000*60; // ms
 
   // Drawing parameters
-  // TODO: slow down the draw if the user isn't moving
   this.FPS = 30;
-  this.DRAW_INTERVAL = 1000 / this.FPS;
   this.MINIMUM_ANIMATION_DISTANCE = 0; // meters
 
   this.initMarkerAndLabel = function(position) {
@@ -107,11 +105,6 @@ function AnimatedUser(map, userName, userId) {
       }
       this.marker.setPosition(markerDestLocation);
     }
-
-    var selfObject = this;
-    setTimeout(function() {
-      selfObject.draw();
-    }, this.DRAW_INTERVAL);
   }
  
   // initialization function

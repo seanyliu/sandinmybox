@@ -23,6 +23,9 @@
 <!-- For any user dot that moves on the map -->
 <script type="text/javascript" src="js/AnimatedUser.js"></script>
 
+<!-- Manages the drawing loop -->
+<script type="text/javascript" src="js/DrawUserObjectManager.js"></script>
+
 <script type="text/javascript">
 
 /**
@@ -40,7 +43,9 @@ $(window).load(function() {
   // TODO: Fix the way label.js works. Specifically take out some of
   // the details, such as the font family and label positioning, etc.
   // OR rename it to be something like UserLabel.js.
+  var userManager = new DrawUserObjectManager().startupDrawUserObjectManager();
   var demoUser = new AnimatedUser(map, "Sean", "idsean").startupAnimatedUser();
+  userManager.addUserObject(demoUser);
 });
 
 /**
