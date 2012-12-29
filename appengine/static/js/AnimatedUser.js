@@ -1,7 +1,8 @@
-function AnimatedUser(map, userName, userId) {
+function AnimatedUser(map, userManager, userName, userId) {
   this.label = null;
   this.map = map;
   this.marker = null;
+  this.userManager = userManager;
   this.userName = userName;
   this.currentLocation = null;
   this.lastPollTime = -1;
@@ -88,12 +89,40 @@ function AnimatedUser(map, userName, userId) {
     this.lastPollTime = newPollTime;
   }
 
+  this.lastFootprintLatLng = null;
+  this.DISTANCE_BETWEEN_FOOTPRINTS = 15; // meters
+  this.dropFootprint = function() {
+    var dropFootprint = false;
+    var distanceToAnimate = google.maps.geometry.spherical.computeDistanceBetween(this.currentLocation, this.marker.getPosition());
+    if (distanceToAnimate > this.DISTANCE_BETWEEN_FOOTPRINTS) {
+      if (!this.lastFootprintLatLng) {
+        dropFootprint = true;
+      } else {
+        var distanceToLastFootprint = google.maps.geometry.spherical.computeDistanceBetween(this.lastFootprintLatLng, this.marker.getPosition());
+        if (distanceToLastFootprint > this.DISTANCE_BETWEEN_FOOTPRINTS) {
+          dropFootprint = true;
+        }
+      }
+    }
+    if (dropFootprint) {
+      this.lastFootprintLatLng = this.marker.getPosition();
+      var footprint = new UserFootprint(this.userManager).startupUserFootprint(this.map, this.lastFootprintLatLng);
+      this.userManager.addUserObject(footprint);
+    }
+  }
+
+  this.update = function() {
+  }
+
   this.draw = function() {
     if (!this.marker.getPosition()) {
       this.marker.setPosition(this.currentLocation);
     }
 
     if (this.currentLocation != null) {
+      // drop a footprint where you are now
+      this.dropFootprint();
+
       // Move the user to the correct location within 1 second
       var markerCurrentLocation = this.marker.getPosition();
       var remainingDistanceToAnimate = google.maps.geometry.spherical.computeDistanceBetween(this.currentLocation, markerCurrentLocation); // meters

@@ -44,9 +44,76 @@ $(window).load(function() {
   // the details, such as the font family and label positioning, etc.
   // OR rename it to be something like UserLabel.js.
   var userManager = new DrawUserObjectManager().startupDrawUserObjectManager();
-  var demoUser = new AnimatedUser(map, "Sean", "idsean").startupAnimatedUser();
+  var demoUser = new AnimatedUser(map, userManager, "Sean", "idsean").startupAnimatedUser();
   userManager.addUserObject(demoUser);
 });
+
+/**
+ * A self-fading footprint of the user.
+ * Just a dot that fades itself gradually.
+ */
+function UserFootprint(userManager) {
+  this.marker = null;
+  this.opacity = 100;
+  this.userManager = userManager;
+  this.ANIMATION_FRAME_LENGTH = 1000;
+  this.FPS = 30;
+  this.FRAME_LENGTH = 1000 / this.FPS;
+  this.FRAMES_TO_DELAY = this.ANIMATION_FRAME_LENGTH / this.FRAME_LENGTH;
+  this.framesDelayed = 0;
+
+  // preload the footprint images
+  for (var i=20;i<120;i=i+20) {
+    var preloadImg = $("<img style='display:none;' src='images/footprint"+i+".png'>");
+    preloadImg.appendTo("body");
+  }
+
+  this.startupUserFootprint = function(map, latlng) {
+    // Marker sizes are expressed as a Size of X,Y
+    // where the origin of the image (0,0) is located
+    // in the top left of the image.
+    var image = new google.maps.MarkerImage('images/footprint100.png',
+      // This marker is x pixels wide by y pixels tall.
+      new google.maps.Size(10, 10),
+      // The origin for this image is 0,0.
+      new google.maps.Point(0,0),
+      // The anchor for this image is the base of the flagpole at 0,32.
+      new google.maps.Point(5, 5));
+
+    var newMarker = new google.maps.Marker({
+      position: latlng,
+      map: map,
+      icon: image
+    });
+
+    this.marker = newMarker;
+
+    return this;
+  }
+
+  this.draw = function() {
+    // because we initialize as first frame, so start counting at 1
+    this.framesDelayed++;
+
+    // only execute after FRAMES_TO_DELAY # of frames have passed
+    if (this.framesDelayed >= this.FRAMES_TO_DELAY) {
+      this.opacity = this.opacity - 20;
+      if (this.opacity <= 0) {
+        // Delete the object
+        this.userManager.removeUserObject(this);
+        this.marker.setMap(null);
+      } else {
+        // TODO: set object opacity
+        var image = new google.maps.MarkerImage('images/footprint'+this.opacity+'.png',
+          new google.maps.Size(10, 10),
+          new google.maps.Point(0,0),
+          new google.maps.Point(5, 5));
+        this.marker.setIcon(image);
+      }
+      this.framesDelayed = 0;
+    }
+  }
+}
 
 /**
  * Initialize a default Google maps
@@ -114,6 +181,9 @@ function demoPollServerForLocation(userId) {
   return newLatLng;
 }
 
+/**
+ * Call the server and lookup a specified user's location
+ */
 function pollServerForLocation(userId) {
   // TODO: implement
   // TODO: fold into AnimatedUser

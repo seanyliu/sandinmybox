@@ -12,7 +12,12 @@ function DrawUserObjectManager() {
   }
 
   this.draw = function() {
-    for (x in this.userObjects) {
+    for (var x in this.userObjects) {
+      if (this.userObjects[x].update) {
+        this.userObjects[x].update();
+      }
+    }
+    for (var x in this.userObjects) {
       if (this.userObjects[x].draw) {
         this.userObjects[x].draw();
       }
@@ -24,7 +29,15 @@ function DrawUserObjectManager() {
   }
 
   this.removeUserObject = function(userObject) {
-    this.userObjects.removeObject(userObject);
+    var objectIndex = -1;
+    for (var i=0; i<this.userObjects.length; i++) {
+      if (this.userObjects[i] === userObject) {
+        objectIndex = i;
+      }
+    }
+    if (objectIndex > -1) {
+      this.userObjects.splice(objectIndex,1);
+    }
   }
 }
 
