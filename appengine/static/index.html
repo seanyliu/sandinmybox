@@ -44,8 +44,12 @@ $(window).load(function() {
   // the details, such as the font family and label positioning, etc.
   // OR rename it to be something like UserLabel.js.
   var userManager = new DrawUserObjectManager().startupDrawUserObjectManager();
-  var demoUser = new AnimatedUser(map, userManager, "Sean", "idsean").startupAnimatedUser();
-  userManager.addUserObject(demoUser);
+  var demoUserSean = new AnimatedUser(map, userManager, "Sean", "idsean").startupAnimatedUser();
+  userManager.addUserObject(demoUserSean);
+  var demoUserNate = new AnimatedUser(map, userManager, "Nate", "idnate").startupAnimatedUser();
+  userManager.addUserObject(demoUserNate);
+  var demoUserAJ = new AnimatedUser(map, userManager, "AJ", "idaj").startupAnimatedUser();
+  userManager.addUserObject(demoUserAJ);
 });
 
 /**
@@ -148,9 +152,8 @@ function styleMapLikeMauraders(map) {
 /**
  * For the demo, have the user follow a fixed path
  */
-var _demoLoopIndex = 0;
-function demoPollServerForLocation(userId) {
-  // TODO: condition demo on userId
+var _demoLoopIndexSean = 0;
+function demoPollServerForLocationSean(userId) {
   var movementPath = [
     [42.366376,-71.122818],
     [42.366299,-71.122845],
@@ -174,12 +177,66 @@ function demoPollServerForLocation(userId) {
     [42.366733,-71.122708],
     [42.366602,-71.122751]
   ];
-  _demoLoopIndex++;
-  _demoLoopIndex = _demoLoopIndex % movementPath.length;
-  var newLatLngArr = movementPath[_demoLoopIndex];
+  _demoLoopIndexSean++;
+  _demoLoopIndexSean = _demoLoopIndexSean % movementPath.length;
+  var newLatLngArr = movementPath[_demoLoopIndexSean];
   var newLatLng = new google.maps.LatLng(newLatLngArr[0], newLatLngArr[1]);
   return newLatLng;
 }
+
+var _demoLoopIndexNate = 0;
+function demoPollServerForLocationNate(userId) {
+  var movementPath = [
+    [42.365421,-71.119995],
+    [42.365505,-71.119781],
+    [42.365679,-71.119577],
+    [42.365838,-71.11941],
+    [42.366135,-71.119394],
+    [42.366444,-71.119448],
+    [42.366777,-71.119502],
+    [42.366963,-71.119711],
+    [42.367027,-71.120059],
+    [42.366912,-71.120328],
+    [42.366757,-71.12044],
+    [42.366603,-71.120564],
+    [42.366377,-71.120558],
+    [42.36606,-71.120505],
+    [42.36577,-71.120462],
+    [42.365525,-71.12029]
+  ];
+  _demoLoopIndexNate++;
+  _demoLoopIndexNate = _demoLoopIndexNate % movementPath.length;
+  var newLatLngArr = movementPath[_demoLoopIndexNate];
+  var newLatLng = new google.maps.LatLng(newLatLngArr[0], newLatLngArr[1]);
+  return newLatLng;
+}
+
+var _demoLoopIndexAJ = 0;
+function demoPollServerForLocationAJ(userId) {
+  var movementPath = [
+    [42.368057,-71.123976],
+    [42.367958,-71.124088],
+    [42.367859,-71.124185],
+    [42.367756,-71.124271],
+    [42.367661,-71.124372],
+    [42.367526,-71.124496],
+    [42.367423,-71.124582],
+    [42.367316,-71.124383],
+    [42.367189,-71.124136],
+    [42.367086,-71.1239],
+    [42.367031,-71.123788],
+    [42.367241,-71.123621],
+    [42.367502,-71.123428],
+    [42.367772,-71.123434],
+    [42.367922,-71.123723]
+  ];
+  _demoLoopIndexAJ++;
+  _demoLoopIndexAJ = _demoLoopIndexAJ % movementPath.length;
+  var newLatLngArr = movementPath[_demoLoopIndexAJ];
+  var newLatLng = new google.maps.LatLng(newLatLngArr[0], newLatLngArr[1]);
+  return newLatLng;
+}
+
 
 /**
  * Call the server and lookup a specified user's location
@@ -187,7 +244,13 @@ function demoPollServerForLocation(userId) {
 function pollServerForLocation(userId) {
   // TODO: implement
   // TODO: fold into AnimatedUser
-  return demoPollServerForLocation(userId);
+  if (userId == "idsean") {
+    return demoPollServerForLocationSean(userId);
+  } else if (userId == "idnate") {
+    return demoPollServerForLocationNate(userId);
+  } else if (userId == "idaj") {
+    return demoPollServerForLocationAJ(userId);
+  }
 }
 
 </script>

@@ -4,6 +4,7 @@ function AnimatedUser(map, userManager, userName, userId) {
   this.marker = null;
   this.userManager = userManager;
   this.userName = userName;
+  this.userId = userId;
   this.currentLocation = null;
   this.lastPollTime = -1;
   this.DISTANCE_THRESHOLD = 0; // TODO: update
@@ -43,7 +44,7 @@ function AnimatedUser(map, userManager, userName, userId) {
   this.initLabel = function(marker) {
     this.label = new Label({
       map: this.map,
-      text: "Sean"
+      text: this.userName
     });
     this.label.bindTo('position', marker, 'position');
   }
