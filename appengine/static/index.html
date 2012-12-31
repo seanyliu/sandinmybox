@@ -260,7 +260,7 @@ function pollServerForLocation(userId) {
 html {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 body {
@@ -279,9 +279,58 @@ body {
   color: #6C6453;
 }
 
+#titleWrapper {
+  position: absolute;
+  width: 100%;
+  top: 80px;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 30px;
+  color: #000;
+  opacity: 0.5;
+}
+
+#subtextWrapper {
+  position: absolute;
+  width: 100%;
+  top: 250px;
+  text-align: center;
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 30px;
+  color: #000;
+  opacity: 0.5;
+}
+
+#downloadWrapper {
+  position: absolute;
+  width: 100%;
+  top: 350px;
+  text-align: center;
+  font-family: 'IM Fell DW Pica', serif;
+  font-size: 60px;
+  color: #FFFFFF;
+}
+
+.button {
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border: 1px solid #FF2626;
+  display: inline-block;
+  padding: 15px 70px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#FF7373), to(#FF4D4D));
+  background: -moz-linear-gradient(top,  #FF7373,  #FF4D4D);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF7373', endColorstr='#FF4D4D');
+  box-shadow: 0px 5px 5px 1px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
 </style>
 </head>
 <body>
 <div id="mapCanvas">Looks like Google Maps failed to load :(</div>
+<div id="titleWrapper">Sidekick</div>
+<div id="subtextWrapper">Share your footsteps.</div>
+<div id="downloadWrapper"><div class="button" onClick="javascript:alert('Coming soon!')">Download</div></div>
 </body>
 </html>
