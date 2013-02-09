@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSL0WNg47Zejg83jzLRmHTdBiXuURRsuY&sensor=true&libraries=geometry">
+</script>
+
+<script type="text/javascript">
+
+/**
+ * Start here. Call this when the page finishes loading.
+ */
+$(window).load(function() {
+  // get the div for the map
+  var mapDiv = document.getElementById("mapCanvas");
+
+  // Create a new Maurader's map
+  var map = initGoogleMaps(mapDiv);
+
+  // submit via ajax
+  $.ajax({
+    type: "GET",
+    url: "/py/location",
+  }).done(function(msg) {
+    alert(msg);
+  });
+
+});
+
+/**
+ * Initialize a default Google maps
+ */
+function initGoogleMaps(mapDiv) {
+  var mapOptions = {
+    zoom: 17,
+    center: new google.maps.LatLng(42.366458,-71.122813),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  }
+  var map = new google.maps.Map(mapDiv, mapOptions);
+  return map;
+}
+</script>
+<style type="text/css">
+
+html {
+  height: 100%;
+  width: 100%;
+  /*overflow: hidden;*/
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+}
+
+#mapCanvas {
+  height: 100%;
+  width: 100%;
+}
+
+</style>
+</head>
+<body>
+<div id="mapCanvas">Looks like Google Maps failed to load :(</div>
+</body>
+</html>

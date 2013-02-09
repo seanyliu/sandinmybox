@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<script type="text/javascript">
+
+/**
+ * Start here. Call this when the page finishes loading.
+ */
+$(window).load(function() {
+  $("#update-form").submit(function() {
+
+    // extract form fields
+    var ajaxData = new Object();
+    $("form [type!='radio'][type!='checkbox'][name]").each(function() {
+      ajaxData[$(this).attr('name')] = $(this).val();
+    });
+
+    // submit via ajax
+    var formUrl = $(this).attr("action");
+    $.ajax({
+      type: "POST",
+      url: formUrl,
+      data: ajaxData
+    }).done(function(msg) {
+      $("#server-status").html(msg);
+    });
+
+    return false;
+  });
+});
+
+</script>
+<style type="text/css">
+
+html {
+  height: 100%;
+  width: 100%;
+  /*overflow: hidden;*/
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+}
+
+</style>
+</head>
+<body>
+
+<form action="/py/location" method="post" id="update-form">
+  Address:
+  <input type="text" name="address" />
+  Count:
+  <input type="text" name="count" />
+  <input type="submit" value="Submit" />
+</form>
+
+<div id="server-status"></div>
+
+</body>
+</html>
