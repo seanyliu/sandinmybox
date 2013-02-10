@@ -1,1 +1,20 @@
-hello new
+"Sidekick Technical ReadMe"
+
+
+--- THINGS TO KNOW ---
+App.yaml in appengine root
+	Config file with all the URL mappings
+
+[Nothing currently in main.py]
+
+
+Index.html -- primary file
+
+- Loads Google Maps
+- Skins it
+
+- Continuous loop
+   Register objects
+   Tells objects to update themselves
+   Objects poll servers updates visual position
+     --as of 27 Jan, dummy server polled

@@ -1,0 +1,24 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="455" measuredH="431" mockupW="434" mockupH="312">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="21" y="119" w="434" h="303" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Sidekick%0Ahttp%3A//sidekick.com/newEvent</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Image" x="62" y="206" w="107" h="40" measuredW="77" measuredH="79" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Sidekick%20Logo</text>
+      </controlProperties>
+    </control>
+    <control controlID="17" controlTypeID="com.balsamiq.mockups::Paragraph" x="67" y="269" w="343" h="162" measuredW="200" measuredH="80" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>*Congrats%21*%20Your%20event%20was%20created.%0AShare%20this%20link%20with%20your%20attendees%3A%0A%5Bsidekick.com/4238aet%5D%0A%20%0AYour%20attendees%20will%20be%20able%20to%20view%20your%20location%20and%20movements%20for%20the%20duration%20of%20the%20event.</text>
+      </controlProperties>
+    </control>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::LinkBar" x="207" y="206" w="-1" h="-1" measuredW="233" measuredH="19" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Home%2C%20My%20Events%2C%20Company%2C%20Blog</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
